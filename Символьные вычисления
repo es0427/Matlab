@@ -1,0 +1,73 @@
+%%
+syms x; %%1.1
+k=[1 4 -2 -14 -3 -18];
+n=poly2sym(k,x);
+disp(n);
+q=factor(n);
+disp(q);
+
+%%
+syms x; %%1.2
+p=x^3+x^2*y+x^2-2*x*y^2+x*y-2*y^2;
+n=poly2sym(p,x);
+disp(n);
+q=factor(n);
+disp(q);
+
+%%
+f=x*exp(-x); %2.1
+n=limit(f,Inf);
+disp(n);
+
+f=tan(x).^(tan(2*x)); %2.2
+n=limit(f,pi./4);
+disp(n);
+
+f=1./(1-x); %2.3
+n=limit(f,x,1,'right');
+disp(n);
+
+%%
+f=atan(x)./2  -x./(2.*(1+x.^2).^2); %3.1
+q=diff(f);
+disp(q);
+w=simplify(q);
+disp(w);
+   
+f=3*x.^4-14*x.^3+12*x.^2+24*x+6; %3.2
+q=diff(f);
+disp(q);
+w=simplify(q);
+disp(w);
+   
+f=(sin(3*x)-cos(3*x)).^2; %3.3
+q=diff(f);
+disp(q);
+w=simplify(q);
+disp(w);
+
+%%
+f=sqrt(1-x.^2)./x.^2; %4.1
+i=int(f);
+disp(i);
+  
+f=1./(sin(x)).^3; %4.2
+i=int(f);
+disp(i);
+  
+f=(sin(2*x)+1).^(1./7).*cos(2*x); %4.3
+i=int(f);
+disp(i);
+
+%%
+syms k %4.1
+n=symsum(1./k.^k, k, 1, Inf);
+disp(n);
+ 
+syms n %4.2
+e=symsum((-1).^((n.^2+n)./2).*(n./2.^(n)), n, 0, Inf);
+disp(e);
+ 
+syms x w %4.3
+r=symsum(x.^(w), w, 0, Inf);
+disp(r);
