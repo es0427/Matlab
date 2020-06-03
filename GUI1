@@ -1,0 +1,13 @@
+s1=get(handles.text7,'string');
+s2=get(handles.text8,'string');
+s3=get(handles.text9,'string');
+s4=str2num(s1)+str2num(s2)+str2num(s3);
+s5=num2str(s4);
+set(handles.text16,'string',s5);
+s6='Поздравляем!';
+s7='Увы, вы не прошли';
+if s4>250
+  set(handles.text17,'string',s6);
+else 
+  set(handles.text17,'string',s7);
+end
