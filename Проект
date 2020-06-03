@@ -1,0 +1,116 @@
+classdef app1 < matlab.apps.AppBase
+
+    % Properties that correspond to app components
+    properties (Access = public)
+        UIFigure    matlab.ui.Figure
+        fileButton  matlab.ui.control.Button
+        UIAxes      matlab.ui.control.UIAxes
+        Label       matlab.ui.control.Label
+        Label_2     matlab.ui.control.Label
+        Label_3     matlab.ui.control.Label
+    end
+
+    % Callbacks that handle component events
+    methods (Access = private)
+
+        % Button pushed function: fileButton
+        function fileButtonPushed(app, event)
+            [FileId,~,~]=uigetfile;
+            [num,~,~]=xlsread(FileId);
+            T=table(num);
+            A=table2array(T);
+            math=A(:,1);
+            rus=A(:,2);
+            phys=A(:,3);
+            n=length(A);
+            
+            
+mathmin=min(math); mathmax=max(math); summath=sum(math)./n; smath=round(summath);
+rusmin=min(rus); rusmax=max(rus); sumrus=sum(rus)./n; srus=round(sumrus);
+physmin=min(phys); physmax=max(phys); sumphys=sum(phys)./n;sphys=round(sumphys);
+y=[mathmin mathmax smath; rusmin rusmax srus; physmin physmax sphys];
+bar(app.UIAxes,y);
+text(app.UIAxes,0.7,5,0,num2str(y(1,1)));
+text(app.UIAxes,1,5,num2str(y(1,2)));
+text(app.UIAxes,1.2,5,num2str(y(1,3)));
+text(app.UIAxes,1.7,5,num2str(y(2,1)));
+text(app.UIAxes,2,5,num2str(y(2,2)));
+text(app.UIAxes,2.2,5,num2str(y(2,3)));
+text(app.UIAxes,2.7,5,num2str(y(3,1)));
+text(app.UIAxes,3,5,num2str(y(3,2)));
+text(app.UIAxes,3.2,5,num2str(y(3,3)));
+        end
+    end
+
+    % Component initialization
+    methods (Access = private)
+
+        % Create UIFigure and components
+        function createComponents(app)
+
+            % Create UIFigure and hide until all components are created
+            app.UIFigure = uifigure('Visible', 'off');
+            app.UIFigure.Position = [100 100 640 480];
+            app.UIFigure.Name = 'UI Figure';
+
+            % Create fileButton
+            app.fileButton = uibutton(app.UIFigure, 'push');
+            app.fileButton.ButtonPushedFcn = createCallbackFcn(app, @fileButtonPushed, true);
+            app.fileButton.Position = [26 29 100 22];
+            app.fileButton.Text = {'file'; ''};
+
+            % Create UIAxes
+            app.UIAxes = uiaxes(app.UIFigure);
+            title(app.UIAxes, 'ЕГЭ')
+            xlabel(app.UIAxes, '')
+            ylabel(app.UIAxes, '')
+            app.UIAxes.XTick = [0 0.0833333333333333 0.166666666666667 0.25 0.333333333333333 0.416666666666667 0.5 0.583333333333333 0.666666666666667 0.75 0.833333333333333 0.916666666666667 1];
+            app.UIAxes.XTickLabel = '';
+            app.UIAxes.YTickLabel = {'0'; '10'; '20'; '30'; '40'; '50'; '60'; '70'; '80'; '90'; '100'};
+            app.UIAxes.Position = [25 92 592 354];
+
+            % Create Label
+            app.Label = uilabel(app.UIFigure);
+            app.Label.Position = [125 71 85 22];
+            app.Label.Text = 'Математика';
+
+            % Create Label_2
+            app.Label_2 = uilabel(app.UIFigure);
+            app.Label_2.Position = [338 71 50 22];
+            app.Label_2.Text = 'Русский';
+
+            % Create Label_3
+            app.Label_3 = uilabel(app.UIFigure);
+            app.Label_3.Position = [512 71 46 22];
+            app.Label_3.Text = 'Физика';
+
+            % Show the figure after all components are created
+            app.UIFigure.Visible = 'on';
+        end
+    end
+
+    % App creation and deletion
+    methods (Access = public)
+
+        % Construct app
+        function app = app1
+
+            % Create UIFigure and components
+            createComponents(app)
+
+            % Register the app with App Designer
+            registerApp(app, app.UIFigure)
+
+            if nargout == 0
+                clear app
+            end
+        end
+
+        % Code that executes before app deletion
+        function delete(app)
+
+            % Delete UIFigure when app is deleted
+            delete(app.UIFigure)
+        end
+    end
+end
