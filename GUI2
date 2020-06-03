@@ -1,0 +1,111 @@
+classdef matlab6 < matlab.apps.AppBase
+
+    % Properties that correspond to app components
+    properties (Access = public)
+        UIFigure      matlab.ui.Figure
+        UIAxes        matlab.ui.control.UIAxes
+        sinxCheckBox  matlab.ui.control.CheckBox
+        cosxCheckBox  matlab.ui.control.CheckBox
+        BuildButton   matlab.ui.control.Button
+    end
+
+    % Callbacks that handle component events
+    methods (Access = private)
+
+        % Value changed function: sinxCheckBox
+        function sinxCheckBoxValueChanged(app, event)
+            value = app.sinxCheckBox.Value;
+            
+        end
+
+        % Value changed function: cosxCheckBox
+        function cosxCheckBoxValueChanged(app, event)
+            value = app.cosxCheckBox.Value;
+            
+        end
+
+        % Button pushed function: BuildButton
+        function BuildButtonPushed(app, event)
+            if app.sinxCheckBox.Value==1
+                x=[0:0.01:4*pi];
+                y1=sin(x);
+                plot(app.UIAxes,x,y1,'g');
+                hold(app.UIAxes,'on');
+             end
+                  
+             if app.cosxCheckBox.Value==1
+                x=[0:0.01:4*pi];
+                y2=cos(x);
+                plot(app.UIAxes,x,y2,'c');
+                hold(app.UIAxes,'on');
+             end       
+                  
+             hold(app.UIAxes,'off');
+        end
+    end
+
+    % Component initialization
+    methods (Access = private)
+
+        % Create UIFigure and components
+        function createComponents(app)
+
+            % Create UIFigure and hide until all components are created
+            app.UIFigure = uifigure('Visible', 'off');
+            app.UIFigure.Position = [100 100 640 480];
+            app.UIFigure.Name = 'UI Figure';
+
+            % Create UIAxes
+            app.UIAxes = uiaxes(app.UIFigure);
+            title(app.UIAxes, '')
+            xlabel(app.UIAxes, '')
+            ylabel(app.UIAxes, '')
+            app.UIAxes.Position = [23 46 422 391];
+
+            % Create sinxCheckBox
+            app.sinxCheckBox = uicheckbox(app.UIFigure);
+            app.sinxCheckBox.ValueChangedFcn = createCallbackFcn(app, @sinxCheckBoxValueChanged, true);
+            app.sinxCheckBox.Text = 'sin(x)';
+            app.sinxCheckBox.Position = [502 362 51 22];
+
+            % Create cosxCheckBox
+            app.cosxCheckBox = uicheckbox(app.UIFigure);
+            app.cosxCheckBox.ValueChangedFcn = createCallbackFcn(app, @cosxCheckBoxValueChanged, true);
+            app.cosxCheckBox.Text = 'cos(x)';
+            app.cosxCheckBox.Position = [502 319 55 22];
+
+            % Create BuildButton
+            app.BuildButton = uibutton(app.UIFigure, 'push');
+            app.BuildButton.ButtonPushedFcn = createCallbackFcn(app, @BuildButtonPushed, true);
+            app.BuildButton.Position = [502 84 100 22];
+            app.BuildButton.Text = 'Build';
+
+            % Show the figure after all components are created
+            app.UIFigure.Visible = 'on';
+        end
+    end
+
+    % App creation and deletion
+    methods (Access = public)
+
+        % Construct app
+        function app = matlab6
+
+            % Create UIFigure and components
+            createComponents(app)
+
+            % Register the app with App Designer
+            registerApp(app, app.UIFigure)
+
+            if nargout == 0
+                clear app
+            end
+        end
+
+        % Code that executes before app deletion
+        function delete(app)
+
+            % Delete UIFigure when app is deleted
+            delete(app.UIFigure)
+        end
+    end
